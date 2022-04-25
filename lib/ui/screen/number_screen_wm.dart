@@ -14,11 +14,9 @@ NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
 /// WidgetModel for [NumberScreen]
 class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     implements INumberWidgetModel {
-  final _factState = StateNotifier<String>();
+  late final EntityStateNotifier<String> _factState;
 
-  final _quizState = StateNotifier<String>();
-
-  final _loadingState = StateNotifier<bool>();
+  late final EntityStateNotifier<String> _quizState;
 
   final TextEditingController _controller = TextEditingController();
 
@@ -28,17 +26,19 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   Future<void> sendRequest() async {
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
-      _loadingState.accept(true);
+      _factState.loading();
+      _quizState.loading();
       NumberInfo serverAnswer = await model.getNumberInfo(
         int.parse(controller.text),
       );
-      _factState.accept(serverAnswer.fact);
-      _quizState.accept(serverAnswer.quiz.showQuiz());
-      _loadingState.accept(false);
+      _factState.content(serverAnswer.fact);
+      _quizState.content(
+        serverAnswer.quiz.showQuiz(),
+      );
       controller.clear();
     } else {
-      _factState.accept(Strings.failRequest);
-      _quizState.accept("");
+      _factState.content(Strings.failRequest);
+      _quizState.content("");
     }
   }
 
@@ -46,20 +46,16 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   TextEditingController get controller => _controller;
 
   @override
-  ListenableState<String> get factState => _factState;
+  ListenableState<EntityState<String>> get factState => _factState;
 
   @override
-  ListenableState<String> get quizState => _quizState;
-
-  @override
-  ListenableState<bool> get loadingState => _loadingState;
+  ListenableState<EntityState<String>> get quizState => _quizState;
 
   @override
   void initWidgetModel() {
     super.initWidgetModel();
-    _factState.accept(Strings.initFact);
-    _quizState.accept(Strings.initQuiz);
-    _loadingState.accept(false);
+    _factState = EntityStateNotifier<String>.value(Strings.initFact);
+    _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
   }
 
   @override
@@ -67,21 +63,15 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _controller.dispose();
     _factState.dispose();
     _quizState.dispose();
-    _loadingState.dispose();
     super.dispose();
   }
 }
 
 /// Interface of [NumberWidgetModel].
 abstract class INumberWidgetModel extends IWidgetModel {
-  /// Text of the FunFacts TextField.
-  ListenableState<String> get factState;
+  ListenableState<EntityState<String>> get factState;
 
-  /// Text of the quiz TextField.
-  ListenableState<String> get quizState;
-
-  /// State of loading (maybe better to create state of widget)
-  ListenableState<bool> get loadingState;
+  ListenableState<EntityState<String>> get quizState;
 
   /// Text editing controller Main Screen.
   TextEditingController get controller;

@@ -30,13 +30,13 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: wm.controller,
               ),
-              DoubleSourceBuilder<String, bool>(
-                  firstSource: wm.factState,
-                  secondSource: wm.loadingState,
-                  builder: (context, text, isLoad) {
-                    return isLoad ?? false
-                        ? const CircularProgressIndicator()
-                        : Text(text ?? Strings.errorCheck);
+              EntityStateNotifierBuilder<String>(
+                  listenableEntityState: wm.factState,
+                  loadingBuilder: (_, data) {
+                    return const CircularProgressIndicator();
+                  },
+                  builder: (context, text) {
+                    return Text(text ?? Strings.errorCheck);
                   }),
               const Divider(
                 color: Colors.black,
@@ -46,23 +46,52 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              DoubleSourceBuilder<String, bool>(
-                  firstSource: wm.quizState,
-                  secondSource: wm.loadingState,
-                  builder: (context, text, isLoad) {
-                    return isLoad ?? false
-                        ? const CircularProgressIndicator()
-                        : Text(text ?? Strings.errorCheck);
+              EntityStateNotifierBuilder<String>(
+                  listenableEntityState: wm.quizState,
+                  loadingBuilder: (_, data) {
+                    return const CircularProgressIndicator();
+                  },
+                  builder: (context, text) {
+                    return Text(text ?? Strings.errorCheck);
                   }),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: wm.sendRequest,
-        tooltip: "Send",
-        child: const Icon(Icons.search),
+      floatingActionButton: EntityStateNotifierBuilder<String>(
+        listenableEntityState: wm.factState,
+        loadingBuilder: (_, data) {
+          return const _SendRequestButton(
+            iconData: Icons.sync_problem,
+          );
+        },
+        builder: (_, data) {
+          return _SendRequestButton(
+            onPressed: wm.sendRequest,
+            iconData: Icons.add,
+          );
+        },
       ),
+    );
+  }
+}
+
+class _SendRequestButton extends StatelessWidget {
+  final IconData iconData;
+  final VoidCallback? onPressed;
+
+  const _SendRequestButton({
+    Key? key,
+    required this.iconData,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: onPressed,
+      tooltip: 'Increment',
+      child: Icon(iconData),
     );
   }
 }
