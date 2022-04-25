@@ -1,10 +1,10 @@
 import 'package:fun_number_fact_task/domain/quiz.dart';
 
-class ServerAnswer {
+class NumberInfo {
   Quiz quiz;
   String fact;
 
-  ServerAnswer({
+  NumberInfo({
     required this.quiz,
     required this.fact,
   });

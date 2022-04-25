@@ -1,28 +1,8 @@
-// {
-// "id": 92576,
-// "answer": "7",
-// "question": "When writing, many Europeans cross it; most Americans don't",
-// "value": 800,
-// "airdate": "2008-12-08T12:00:00.000Z",
-// "created_at": "2014-02-14T01:58:09.356Z",
-// "updated_at": "2014-02-14T01:58:09.356Z",
-// "category_id": 8472,
-// "game_id": null,
-// "invalid_count": null,
-// "category": {
-// "id": 8472,
-// "title": "a number from 1 to 10",
-// "created_at": "2014-02-11T23:28:10.844Z",
-// "updated_at": "2014-02-11T23:28:10.844Z",
-// "clues_count": 10
-// }
-// }
-
 class Quiz {
   final int id;
   final String answer;
   final String question;
-  final Category2 category2;
+  final QuizCategory category2;
 
   Quiz({
     required this.id,
@@ -36,7 +16,7 @@ class Quiz {
 final int id = $id
 final String answer = $answer
 final String question = $question
-final Category2 category2 = ${category2.id}
+final QuizCategory quizCategory = ${category2.id}
     """;
   }
 
@@ -45,22 +25,22 @@ final Category2 category2 = ${category2.id}
       id: json['id'],
       answer: json['answer'],
       question: json['question'],
-      category2: Category2.fromJson(json['category']),
+      category2: QuizCategory.fromJson(json['category']),
     );
   }
 }
 
-class Category2 {
+class QuizCategory {
   final int id;
   final String title;
 
-  const Category2({
+  const QuizCategory({
     required this.id,
     required this.title,
   });
 
-  factory Category2.fromJson(Map<String, dynamic> json) {
-    return Category2(
+  factory QuizCategory.fromJson(Map<String, dynamic> json) {
+    return QuizCategory(
       id: json['id'],
       title: json['title'],
     );

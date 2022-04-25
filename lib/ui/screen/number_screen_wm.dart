@@ -29,7 +29,7 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _loadingState.accept(true);
-      ServerAnswer serverAnswer = await model.getServerAnswer(
+      NumberInfo serverAnswer = await model.getNumberInfo(
         int.parse(controller.text),
       );
       _factState.accept(serverAnswer.fact);

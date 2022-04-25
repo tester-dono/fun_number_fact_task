@@ -26,7 +26,7 @@ class NumberRepository implements INumberRepository {
       // then parse the JSON.
       String futureNumberFact = responseValue.body;
 
-      return Future.value(futureNumberFact);
+      return futureNumberFact;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -44,7 +44,7 @@ class NumberRepository implements INumberRepository {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       final parsed =
-          jsonDecode(responseValue.body).cast<Map<String, dynamic>>();
+          jsonDecode(responseValue.body).cast<Map<String, Object?>>();
 
       return parsed.map<Quiz>((json) => Quiz.fromJson(json)).toList();
     } else {
