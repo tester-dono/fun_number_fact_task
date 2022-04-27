@@ -67,7 +67,7 @@ class NumberRepository implements INumberRepository {
 
   @override
   Future<Launch> getGraphQLLaunch() async {
-    const String testValue = """
+    const String stringRequest = """
 query Launches{
   launches {
     mission_name
@@ -75,23 +75,23 @@ query Launches{
 }
 
     """;
-    final HttpLink ling = HttpLink('https://api.spacex.land/graphql/');
+    final HttpLink link = HttpLink('https://api.spacex.land/graphql/');
 
     var client = GraphQLClient(
-      link: ling,
+      link: link,
       cache: GraphQLCache(
         store: InMemoryStore(),
       ),
     );
 
     QueryResult result =
-        await client.query(QueryOptions(document: gql(testValue)));
+        await client.query(QueryOptions(document: gql(stringRequest)));
     final List<dynamic> repositories = result.data!["launches"];
 
-    List<Launch> typeTest =
+    List<Launch> launches =
         repositories.map<Launch>((json) => Launch.fromJson(json)).toList();
 
-    return typeTest.first;
+    return launches.first;
   }
 
   @override
