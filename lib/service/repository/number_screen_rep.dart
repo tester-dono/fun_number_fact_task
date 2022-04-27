@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fun_number_fact_task/domain/fish.dart';
+import 'package:fun_number_fact_task/domain/launch.dart';
 import 'package:fun_number_fact_task/domain/quiz.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
 
 /// Repository interface for working with NumberScreen.
@@ -11,6 +14,12 @@ abstract class INumberRepository {
 
   /// method of getting random quiz
   Future<List<Quiz>> getQuiz();
+
+  /// method of getting fish from https
+  Future<Fish> getHttpsFish();
+
+  /// method of getting launch from graphQl
+  Future<Launch> getGraphQLLaunch();
 }
 
 /// Repository for working with a NumberScreen
@@ -32,6 +41,57 @@ class NumberRepository implements INumberRepository {
       // then throw an exception.
       throw Exception('Failed to load fact');
     }
+  }
+
+  @override
+  Future<Fish> getHttpsFish() async {
+    http.Response responseValue = await http.get(
+      Uri.parse('https://www.fishwatch.gov/api/species'),
+    );
+
+    final parsed = jsonDecode(responseValue.body).cast<Map<String, Object?>>();
+
+    if (responseValue.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      List<Fish> banchOfFish =
+          parsed.map<Fish>((json) => Fish.fromJson(json)).toList();
+
+      return banchOfFish.first;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load fact');
+    }
+  }
+
+  @override
+  Future<Launch> getGraphQLLaunch() async {
+    const String testValue = """
+query Launches{
+  launches {
+    mission_name
+  }
+}
+
+    """;
+    final HttpLink ling = HttpLink('https://api.spacex.land/graphql/');
+
+    var client = GraphQLClient(
+      link: ling,
+      cache: GraphQLCache(
+        store: InMemoryStore(),
+      ),
+    );
+
+    QueryResult result =
+        await client.query(QueryOptions(document: gql(testValue)));
+    final List<dynamic> repositories = result.data!["launches"];
+
+    List<Launch> typeTest =
+        repositories.map<Launch>((json) => Launch.fromJson(json)).toList();
+
+    return typeTest.first;
   }
 
   @override

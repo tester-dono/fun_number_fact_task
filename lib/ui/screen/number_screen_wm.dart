@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:elementary/elementary.dart';
-import 'package:fun_number_fact_task/domain/serverAnswer.dart';
+import 'package:fun_number_fact_task/domain/server_answer.dart';
 import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
@@ -18,6 +18,10 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   late final EntityStateNotifier<String> _quizState;
 
+  late final EntityStateNotifier<String> _fishState;
+
+  late final EntityStateNotifier<String> _launchState;
+
   final TextEditingController _controller = TextEditingController();
 
   NumberWidgetModel(NumberModel model) : super(model);
@@ -28,6 +32,8 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     if (maybeNumber != '') {
       _factState.loading();
       _quizState.loading();
+      _fishState.loading();
+      _launchState.loading();
       NumberInfo serverAnswer = await model.getNumberInfo(
         int.parse(controller.text),
       );
@@ -35,10 +41,15 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
       _quizState.content(
         serverAnswer.quiz.showQuiz(),
       );
+      _fishState.content(serverAnswer.fish.text);
+      _launchState.content(serverAnswer.launch.missionName);
+
       controller.clear();
     } else {
       _factState.content(Strings.failRequest);
       _quizState.content("");
+      _fishState.content("");
+      _launchState.content("");
     }
   }
 
@@ -52,10 +63,18 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   ListenableState<EntityState<String>> get quizState => _quizState;
 
   @override
+  ListenableState<EntityState<String>> get fishState => _fishState;
+
+  @override
+  ListenableState<EntityState<String>> get launchState => _launchState;
+
+  @override
   void initWidgetModel() {
     super.initWidgetModel();
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
+    _fishState = EntityStateNotifier<String>.value(Strings.initFish);
+    _launchState = EntityStateNotifier<String>.value(Strings.initLaunch);
   }
 
   @override
@@ -63,6 +82,8 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _controller.dispose();
     _factState.dispose();
     _quizState.dispose();
+    _fishState.dispose();
+    _launchState.dispose();
     super.dispose();
   }
 }
@@ -72,6 +93,10 @@ abstract class INumberWidgetModel extends IWidgetModel {
   ListenableState<EntityState<String>> get factState;
 
   ListenableState<EntityState<String>> get quizState;
+
+  ListenableState<EntityState<String>> get fishState;
+
+  ListenableState<EntityState<String>> get launchState;
 
   /// Text editing controller Main Screen.
   TextEditingController get controller;

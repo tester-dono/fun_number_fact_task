@@ -54,6 +54,28 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                   builder: (context, text) {
                     return Text(text ?? Strings.errorCheck);
                   }),
+              EntityStateNotifierBuilder<String>(
+                  listenableEntityState: wm.fishState,
+                  loadingBuilder: (_, data) {
+                    return const CircularProgressIndicator();
+                  },
+                  builder: (context, text) {
+                    return Text(text ?? Strings.errorCheck);
+                  }),
+              const Divider(
+                color: Colors.black,
+              ),
+              EntityStateNotifierBuilder<String>(
+                  listenableEntityState: wm.launchState,
+                  loadingBuilder: (_, data) {
+                    return const CircularProgressIndicator();
+                  },
+                  builder: (context, text) {
+                    return Text(text ?? Strings.errorCheck);
+                  }),
+              const Divider(
+                color: Colors.black,
+              ),
             ],
           ),
         ),
