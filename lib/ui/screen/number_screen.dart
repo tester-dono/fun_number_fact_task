@@ -32,12 +32,9 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
               ),
               EntityStateNotifierBuilder<String>(
                   listenableEntityState: wm.factState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+                  loadingBuilder: (_, data) =>
+                      const CircularProgressIndicator(),
+                  builder: (context, text) => Text(text ?? Strings.errorCheck)),
               const Divider(
                 color: Colors.black,
               ),
@@ -48,31 +45,22 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
               ),
               EntityStateNotifierBuilder<String>(
                   listenableEntityState: wm.quizState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+                  loadingBuilder: (_, data) =>
+                      const CircularProgressIndicator(),
+                  builder: (context, text) => Text(text ?? Strings.errorCheck)),
               EntityStateNotifierBuilder<String>(
-                  listenableEntityState: wm.fishState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+                listenableEntityState: wm.fishState,
+                loadingBuilder: (_, data) => const CircularProgressIndicator(),
+                builder: (context, text) => Text(text ?? Strings.errorCheck),
+              ),
               const Divider(
                 color: Colors.black,
               ),
               EntityStateNotifierBuilder<String>(
-                  listenableEntityState: wm.launchState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+                listenableEntityState: wm.launchState,
+                loadingBuilder: (_, data) => const CircularProgressIndicator(),
+                builder: (context, text) => Text(text ?? Strings.errorCheck),
+              ),
               const Divider(
                 color: Colors.black,
               ),
@@ -82,17 +70,13 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
       ),
       floatingActionButton: EntityStateNotifierBuilder<String>(
         listenableEntityState: wm.factState,
-        loadingBuilder: (_, data) {
-          return const _SendRequestButton(
-            iconData: Icons.sync_problem,
-          );
-        },
-        builder: (_, data) {
-          return _SendRequestButton(
-            onPressed: wm.sendRequest,
-            iconData: Icons.add,
-          );
-        },
+        loadingBuilder: (_, data) => const _SendRequestButton(
+          iconData: Icons.sync_problem,
+        ),
+        builder: (_, data) => _SendRequestButton(
+          onPressed: wm.sendRequest,
+          iconData: Icons.add,
+        ),
       ),
     );
   }
