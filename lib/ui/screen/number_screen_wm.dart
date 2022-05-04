@@ -5,6 +5,7 @@ import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fun_number_fact_task/utils/inherit_string.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -74,7 +75,7 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
     _fishState = EntityStateNotifier<String>.value(Strings.initFish);
-    _launchState = EntityStateNotifier<String>.value(Strings.initLaunch);
+    _launchState = EntityStateNotifier<String>.value(InheritString.of(context).string);
   }
 
   @override
