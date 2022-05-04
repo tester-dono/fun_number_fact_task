@@ -6,4 +6,7 @@ abstract class Strings {
   static const String initFact = 'print a number and give it a try';
   static const String failRequest = 'I need a number, sport';
   static const String initQuiz = '';
+  static const String initFish = 'https req';
+  static const String initLaunch = 'grapgh req';
+
 }
