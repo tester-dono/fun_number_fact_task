@@ -6,6 +6,7 @@ import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fun_number_fact_task/utils/inherit_string.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -15,6 +16,8 @@ NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
 /// WidgetModel for [NumberScreen]
 class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     implements INumberWidgetModel {
+  final _counter = StateNotifier<int>();
+
   late final EntityStateNotifier<String> _factState;
 
   late final EntityStateNotifier<String> _quizState;
@@ -25,10 +28,16 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   final TextEditingController _controller = TextEditingController();
 
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+
   NumberWidgetModel(NumberModel model) : super(model);
 
   @override
   Future<void> sendRequest() async {
+    final SharedPreferences prefs = await _prefs;
+    final int counter = (prefs.getInt('counter') ?? 0) + 1;
+    _counter.accept(counter);
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _factState.loading();
@@ -58,6 +67,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   TextEditingController get controller => _controller;
 
   @override
+  StateNotifier<int> get counter => _counter;
+
+  @override
   ListenableState<EntityState<String>> get factState => _factState;
 
   @override
@@ -81,6 +93,7 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   @override
   void dispose() {
     _controller.dispose();
+    _counter.dispose();
     _factState.dispose();
     _quizState.dispose();
     _fishState.dispose();
@@ -91,6 +104,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
 /// Interface of [NumberWidgetModel].
 abstract class INumberWidgetModel extends IWidgetModel {
+
+  StateNotifier<int> get counter;
+
   ListenableState<EntityState<String>> get factState;
 
   ListenableState<EntityState<String>> get quizState;
