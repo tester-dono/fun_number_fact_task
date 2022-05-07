@@ -5,8 +5,6 @@ import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
-import 'package:fun_number_fact_task/utils/inherit_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -28,16 +26,13 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   final TextEditingController _controller = TextEditingController();
 
-  late final Future<SharedPreferences> _prefs;
-
-
   NumberWidgetModel(NumberModel model) : super(model);
 
   @override
   Future<void> sendRequest() async {
-    final SharedPreferences prefs = await _prefs;
-    final int counter = (prefs.getInt('counter') ?? 0) + 1;
-    _counter.accept(counter);
+    int counter = await model.getCounter();
+    _counter.accept(++counter);
+    model.setCounter(counter);
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _factState.loading();
@@ -84,11 +79,10 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   @override
   void initWidgetModel() {
     super.initWidgetModel();
-    _prefs = model.getPrefs();
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
     _fishState = EntityStateNotifier<String>.value(Strings.initFish);
-    _launchState = EntityStateNotifier<String>.value(InheritString.of(context).string);
+    _launchState = EntityStateNotifier<String>.value("nothing to show");
   }
 
   @override
@@ -105,7 +99,6 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
 /// Interface of [NumberWidgetModel].
 abstract class INumberWidgetModel extends IWidgetModel {
-
   StateNotifier<int> get counter;
 
   ListenableState<EntityState<String>> get factState;

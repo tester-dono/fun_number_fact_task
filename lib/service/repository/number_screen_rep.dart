@@ -22,9 +22,11 @@ abstract class INumberRepository {
   /// method of getting launch from graphQl
   Future<Launch> getGraphQLLaunch();
 
-  /// method of getting [SharedPreferences]
-  Future<SharedPreferences>  getPrefs();
+  /// method of getting counter from [SharedPreferences]
+  Future<int> getCounter();
 
+  /// method of saving counter in [SharedPreferences]
+  void saveCounter(int newCounter);
 }
 
 /// Repository for working with a NumberScreen
@@ -120,7 +122,19 @@ query Launches{
   }
 
   @override
-  Future<SharedPreferences> getPrefs() {
-    return SharedPreferences.getInstance();
+  Future<int> getCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? counter = prefs.getInt('counter');
+    if (counter != null) {
+      return counter;
+    } else {
+      return 0;
+    }
+  }
+
+  @override
+  void saveCounter(int newCounter) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('counter', newCounter);
   }
 }

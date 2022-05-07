@@ -4,17 +4,20 @@ import 'package:elementary/elementary.dart';
 import 'package:fun_number_fact_task/domain/quiz.dart';
 import 'package:fun_number_fact_task/domain/server_answer.dart';
 import 'package:fun_number_fact_task/service/repository/number_screen_rep.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Model of [NumberWidgetModel]
 class NumberModel extends ElementaryModel {
   final NumberRepository _rep = NumberRepository();
 
-  /// method of getting random quiz
-  Future<SharedPreferences> getPrefs() async {
-    return _rep.getPrefs();
+  /// method of getting counter from SharedPrefs
+  Future<int> getCounter() async {
+    return _rep.getCounter();
   }
 
+  /// method of saving counter in SharedPrefs
+  void setCounter(int newCounter) {
+    _rep.saveCounter(newCounter);
+  }
 
   /// method of getting random quiz
   Future<Quiz> getFirstQuiz() async {
