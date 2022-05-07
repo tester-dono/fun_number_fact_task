@@ -15,6 +15,9 @@ NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
 /// WidgetModel for [NumberScreen]
 class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     implements INumberWidgetModel {
+
+  late final provider = StateInheritedWidget.of(context);
+
   late final EntityStateNotifier<String> _factState;
 
   late final EntityStateNotifier<String> _quizState;
@@ -29,6 +32,10 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   @override
   Future<void> sendRequest() async {
+    print(provider.state.counter);
+    provider.incrementCounter();
+
+    // InheritString.of(context) = "test";
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _factState.loading();
@@ -50,7 +57,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
       _factState.content(Strings.failRequest);
       _quizState.content("");
       _fishState.content("");
-      _launchState.content("");
+      // _launchState.content("");
+      _launchState.content(InheritString.of(context).string);
+
     }
   }
 
