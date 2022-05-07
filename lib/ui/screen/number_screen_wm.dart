@@ -28,7 +28,7 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   final TextEditingController _controller = TextEditingController();
 
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late final Future<SharedPreferences> _prefs;
 
 
   NumberWidgetModel(NumberModel model) : super(model);
@@ -84,6 +84,7 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   @override
   void initWidgetModel() {
     super.initWidgetModel();
+    _prefs = model.getPrefs();
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
     _fishState = EntityStateNotifier<String>.value(Strings.initFish);
