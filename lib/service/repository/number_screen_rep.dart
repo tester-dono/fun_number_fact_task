@@ -6,6 +6,7 @@ import 'package:fun_number_fact_task/domain/launch.dart';
 import 'package:fun_number_fact_task/domain/quiz.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Repository interface for working with NumberScreen.
 abstract class INumberRepository {
@@ -20,6 +21,10 @@ abstract class INumberRepository {
 
   /// method of getting launch from graphQl
   Future<Launch> getGraphQLLaunch();
+
+  /// method of getting [SharedPreferences]
+  Future<SharedPreferences>  getPrefs();
+
 }
 
 /// Repository for working with a NumberScreen
@@ -111,5 +116,10 @@ query Launches{
       // then throw an exception.
       throw Exception('Failed to load quiz');
     }
+  }
+
+  @override
+  Future<SharedPreferences> getPrefs() {
+    return SharedPreferences.getInstance();
   }
 }
