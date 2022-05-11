@@ -5,6 +5,7 @@ import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fun_number_fact_task/utils/inherit_string.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -14,6 +15,8 @@ NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
 /// WidgetModel for [NumberScreen]
 class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     implements INumberWidgetModel {
+  late final provider = StateInheritedWidget.of(context);
+
   late final EntityStateNotifier<String> _factState;
 
   late final EntityStateNotifier<String> _quizState;
@@ -28,29 +31,44 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   @override
   Future<void> sendRequest() async {
+    provider.incrementCounter();
+
+    // InheritString.of(context) = "test";
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
-      _factState.loading();
-      _quizState.loading();
-      _fishState.loading();
-      _launchState.loading();
+      setLoad();
       NumberInfo serverAnswer = await model.getNumberInfo(
         int.parse(controller.text),
       );
-      _factState.content(serverAnswer.fact);
-      _quizState.content(
-        serverAnswer.quiz.showQuiz(),
-      );
-      _fishState.content(serverAnswer.fish.text);
-      _launchState.content(serverAnswer.launch.missionName);
-
+      serveAnswer(serverAnswer);
       controller.clear();
     } else {
-      _factState.content(Strings.failRequest);
-      _quizState.content("");
-      _fishState.content("");
-      _launchState.content("");
+      failRequest();
     }
+  }
+
+  void setLoad() {
+    _factState.loading();
+    _quizState.loading();
+    _fishState.loading();
+    _launchState.loading();
+  }
+
+  void serveAnswer(NumberInfo serverAnswer) {
+    _factState.content(serverAnswer.fact);
+    _quizState.content(
+      serverAnswer.quiz.showQuiz(),
+    );
+    _fishState.content(serverAnswer.fish.text);
+    _launchState.content(serverAnswer.launch.missionName);
+  }
+
+  void failRequest() {
+    _factState.content(Strings.failRequest);
+    _quizState.content("");
+    _fishState.content("");
+    _launchState
+        .content("Counter form inheritWidget: ${provider.state.klass.counter}");
   }
 
   @override
@@ -74,7 +92,8 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
     _fishState = EntityStateNotifier<String>.value(Strings.initFish);
-    _launchState = EntityStateNotifier<String>.value(Strings.initLaunch);
+    _launchState = EntityStateNotifier<String>.value(
+        "Counter form inheritWidget: ${provider.state.klass.counter}");
   }
 
   @override

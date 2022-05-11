@@ -24,6 +24,13 @@ abstract class INumberRepository {
 
 /// Repository for working with a NumberScreen
 class NumberRepository implements INumberRepository {
+  final  client = GraphQLClient(
+    link: HttpLink('https://api.spacex.land/graphql/'),
+    cache: GraphQLCache(
+      store: InMemoryStore(),
+    ),
+  );
+
   @override
   Future<String> getNumberFact(int number) async {
     http.Response responseValue = await http.get(
@@ -75,14 +82,6 @@ query Launches{
 }
 
     """;
-    final HttpLink link = HttpLink('https://api.spacex.land/graphql/');
-
-    var client = GraphQLClient(
-      link: link,
-      cache: GraphQLCache(
-        store: InMemoryStore(),
-      ),
-    );
 
     QueryResult result =
         await client.query(QueryOptions(document: gql(stringRequest)));
