@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StateWidget(
+    return StateWithInheritWidget(
       child: MaterialApp(
         title: 'Flutter little app1',
         theme: ThemeData(

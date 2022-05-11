@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
 
-class StateWidget extends StatefulWidget {
+class StateWithInheritWidget extends StatefulWidget {
   final Widget child;
 
-  const StateWidget({
+  const StateWithInheritWidget({
     required final this.child,
   });
 
   @override
-  _StateWidgetState createState() => _StateWidgetState();
+  _StateWithInheritWidgetState createState() => _StateWithInheritWidgetState();
 }
 
-class _StateWidgetState extends State<StateWidget> {
+class _StateWithInheritWidgetState extends State<StateWithInheritWidget> {
   CoreState state = CoreState(klass: VeryDifficultClass(counter: 0));
 
   void incrementCounter() {
@@ -32,7 +32,7 @@ class _StateWidgetState extends State<StateWidget> {
 
 class StateInheritedWidget extends InheritedWidget {
   final CoreState state;
-  final _StateWidgetState stateWidget;
+  final _StateWithInheritWidgetState stateWidget;
 
   const StateInheritedWidget({
     required Widget child,
@@ -40,7 +40,7 @@ class StateInheritedWidget extends InheritedWidget {
     required this.stateWidget,
   }) : super(child: child,);
 
-  static _StateWidgetState of(BuildContext context) => context
+  static _StateWithInheritWidgetState of(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<StateInheritedWidget>()!
       .stateWidget;
 
