@@ -12,18 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StateWidget(
-      child: InheritString(
-        string: 'String from inherit1',
-        child: MaterialApp(
-          title: 'Flutter little app1',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: const NumberScreen(),
+      child: MaterialApp(
+        title: 'Flutter little app1',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
+        home: const NumberScreen(),
       ),
     );
   }
 }
-
-
