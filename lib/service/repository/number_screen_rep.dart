@@ -31,6 +31,8 @@ abstract class INumberRepository {
 
 /// Repository for working with a NumberScreen
 class NumberRepository implements INumberRepository {
+  final Future<SharedPreferences> futurePrefs = SharedPreferences.getInstance();
+
   @override
   Future<String> getNumberFact(int number) async {
     http.Response responseValue = await http.get(
@@ -123,8 +125,8 @@ query Launches{
 
   @override
   Future<int> getCounter() async {
-    final prefs = await SharedPreferences.getInstance();
-    final int? counter = prefs.getInt('counter');
+    final SharedPreferences prefs = await futurePrefs;
+    final int? counter = await prefs.getInt('counter');
     if (counter != null) {
       return counter;
     } else {
@@ -134,7 +136,7 @@ query Launches{
 
   @override
   void saveCounter(int newCounter) async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await futurePrefs;
     await prefs.setInt('counter', newCounter);
   }
 }
