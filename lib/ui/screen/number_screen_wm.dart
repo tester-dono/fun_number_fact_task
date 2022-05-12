@@ -5,6 +5,7 @@ import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -14,6 +15,16 @@ NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
 /// WidgetModel for [NumberScreen]
 class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     implements INumberWidgetModel {
+  final StateNotifier<String> _titleState = StateNotifier<String>();
+
+  final StateNotifier<String> _genderState = StateNotifier<String>();
+
+  String _gender = "male";
+
+  final StateNotifier<String> _amountState = StateNotifier<String>();
+
+  int _amount = 1;
+
   late final EntityStateNotifier<String> _factState;
 
   late final EntityStateNotifier<String> _quizState;
@@ -25,6 +36,62 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   final TextEditingController _controller = TextEditingController();
 
   NumberWidgetModel(NumberModel model) : super(model);
+
+  String prepareMessage(int howMany, String userName) {
+    return Intl.plural(howMany,
+        one: 'Are you ready to press a button,$userName?',
+        other: 'Are you ready to press a button,${userName}s?',
+        name: 'prepareMessage',
+        args: [howMany, userName],
+        desc: 'prepares Messages.',
+        examples: const {'howMany': 1, 'userName': 'boy'});
+  }
+
+  String giveIntlGender(String userGender) {
+    return Intl.gender(
+      userGender,
+      male: 'boy',
+      female: 'girl',
+      other: userGender,
+      args: [userGender],
+      desc: 'The user is not available to hangout.',
+    );
+  }
+
+  @override
+  Future<void> changeSex() async {
+    if (_gender == "male") {
+      _gender = "female";
+      _genderState.accept("female");
+    } else {
+      _gender = "male";
+      _genderState.accept("male");
+    }
+
+    _titleState.accept(
+      prepareMessage(
+        _amount,
+        giveIntlGender(_gender),
+      ),
+    );
+  }
+
+  @override
+  Future<void> changeAmount() async {
+    if (_amount == 1) {
+      _amount = 2;
+      _amountState.accept("one");
+    } else {
+      _amount = 1;
+      _amountState.accept("two");
+    }
+    _titleState.accept(
+      prepareMessage(
+        _amount,
+        giveIntlGender(_gender),
+      ),
+    );
+  }
 
   @override
   Future<void> sendRequest() async {
@@ -47,37 +114,20 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
       controller.clear();
     } else {
       _factState.content(Strings.failRequest);
-      _quizState.content(
-          remainingEmailsMessage(int howMany, String userName) =>
-          Intl.plural(
-          howMany,
-          zero: 'There are no emails left for $userName.',
-          one: 'There is $howMany email left for $userName.',
-          other: 'There are $howMany emails left for $userName.',
-          name: 'remainingEmailsMessage',
-          args: [howMany, userName],
-          desc: 'How many emails remain after archiving.',
-          examples: const {'howMany': 42, 'userName': 'Fred'});
-      );
-      _fishState.content(
-          notOnlineMessage(String userName, String userGender) =>
-          Intl.gender(
-          userGender,
-          male: '$userName is unavailable because he is not online.',
-          female: '$userName is unavailable because she is not online.',
-          other: '$userName is unavailable because they are not online',
-          name: 'notOnlineMessage',
-          args: [userName, userGender],
-          desc: 'The user is not available to hangout.',
-          examples: const {{'userGender': 'male', 'userName': 'Fred'},
-            {'userGender': 'female', 'userName' : 'Alice'}});
-      );
-      _launchState.content(AppLocalizations.of(context).language,);
     }
   }
 
   @override
   TextEditingController get controller => _controller;
+
+  @override
+  StateNotifier<String> get titleState => _titleState;
+
+  @override
+  StateNotifier<String> get genderState => _genderState;
+
+  @override
+  StateNotifier<String> get pluralState => _amountState;
 
   @override
   ListenableState<EntityState<String>> get factState => _factState;
@@ -94,6 +144,15 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   @override
   void initWidgetModel() {
     super.initWidgetModel();
+    _titleState.accept(
+      prepareMessage(
+        _amount,
+        giveIntlGender(_gender),
+      ),
+    );
+    _genderState.accept(_gender);
+    _amountState.accept("one");
+
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
     _fishState = EntityStateNotifier<String>.value(Strings.initFish);
@@ -113,6 +172,12 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
 /// Interface of [NumberWidgetModel].
 abstract class INumberWidgetModel extends IWidgetModel {
+  StateNotifier<String> get titleState;
+
+  StateNotifier<String> get genderState;
+
+  StateNotifier<String> get pluralState;
+
   ListenableState<EntityState<String>> get factState;
 
   ListenableState<EntityState<String>> get quizState;
@@ -126,4 +191,10 @@ abstract class INumberWidgetModel extends IWidgetModel {
 
   /// action for [floatingActionButton]
   Future<void> sendRequest();
+
+  /// action for [floatingActionButton]
+  Future<void> changeSex();
+
+  /// action for [floatingActionButton]
+  Future<void> changeAmount();
 }
