@@ -45,7 +45,7 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                 listenableState: wm.counter,
                 builder: (ctx, value) {
                   return value == null
-                      ? Text(
+                      ? const Text(
                      Strings.secondTitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -53,7 +53,7 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                   : Text(
                     "${Strings.secondTitle} : нажали на клавишу $value раз",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   )
                   ;
                 }
