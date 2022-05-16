@@ -7,7 +7,8 @@ import 'package:fun_number_fact_task/service/repository/number_screen_rep.dart';
 
 /// Model of [NumberWidgetModel]
 class NumberModel extends ElementaryModel {
-  final NumberRepository _rep = NumberRepository();
+  NumberModel(this._rep);
+  final NumberRepository _rep;
 
   /// method of getting random quiz
   Future<Quiz> getFirstQuiz() async {

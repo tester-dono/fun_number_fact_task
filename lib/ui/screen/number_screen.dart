@@ -30,14 +30,9 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: wm.controller,
               ),
-              EntityStateNotifierBuilder<String>(
-                  listenableEntityState: wm.factState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+              StateLoader(
+                state: wm.factState,
+              ),
               const Divider(
                 color: Colors.black,
               ),
@@ -46,33 +41,18 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              EntityStateNotifierBuilder<String>(
-                  listenableEntityState: wm.quizState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
-              EntityStateNotifierBuilder<String>(
-                  listenableEntityState: wm.fishState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+              StateLoader(
+                state: wm.quizState,
+              ),
+              StateLoader(
+                state: wm.fishState,
+              ),
               const Divider(
                 color: Colors.black,
               ),
-              EntityStateNotifierBuilder<String>(
-                  listenableEntityState: wm.launchState,
-                  loadingBuilder: (_, data) {
-                    return const CircularProgressIndicator();
-                  },
-                  builder: (context, text) {
-                    return Text(text ?? Strings.errorCheck);
-                  }),
+              StateLoader(
+                state: wm.launchState,
+              ),
               const Divider(
                 color: Colors.black,
               ),
@@ -115,5 +95,26 @@ class _SendRequestButton extends StatelessWidget {
       tooltip: 'send',
       child: Icon(iconData),
     );
+  }
+}
+
+class StateLoader extends StatelessWidget {
+  const StateLoader({
+    required this.state,
+    Key? key,
+  }) : super(key: key);
+
+  final ListenableState<EntityState<String>> state;
+
+  @override
+  Widget build(BuildContext context) {
+    return EntityStateNotifierBuilder<String>(
+        listenableEntityState: state,
+        loadingBuilder: (_, data) {
+          return const CircularProgressIndicator();
+        },
+        builder: (context, text) {
+          return Text(text ?? Strings.errorCheck);
+        });
   }
 }

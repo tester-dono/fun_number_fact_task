@@ -2,13 +2,18 @@ import 'dart:async';
 import 'package:elementary/elementary.dart';
 import 'package:fun_number_fact_task/domain/server_answer.dart';
 import 'package:fun_number_fact_task/res/strings/strings.dart';
+import 'package:fun_number_fact_task/service/repository/number_screen_rep.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
-  return NumberWidgetModel(NumberModel());
+  return NumberWidgetModel(
+    NumberModel(
+      NumberRepository(),
+    ),
+  );
 }
 
 /// WidgetModel for [NumberScreen]
