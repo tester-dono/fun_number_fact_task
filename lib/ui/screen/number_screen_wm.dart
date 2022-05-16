@@ -39,27 +39,28 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   NumberWidgetModel(NumberModel model) : super(model);
 
-  String prepareMessage(int howMany, String userName) {
-    String? test = AppLocalizations.of(context)!.helloWorld;
-    return Intl.plural(howMany,
-        one: 'Are you ready to press a button,$userName?',
-        other: 'Are you ready to press a button,${userName}s?',
-        name: 'prepareMessage',
-        args: [howMany, userName],
-        desc: 'prepares Messages.',
-        examples: const {'howMany': 1, 'userName': 'boy'});
+  // я пытался
+  String prepareMessage(int howMany) {
+      return Intl.plural(howMany,
+          one: '${AppLocalizations.of(context)!.greetings},${giveIntlGender(_gender)}${AppLocalizations.of(context)!.notS}?',
+          other: '${AppLocalizations.of(context)!.greetings},${giveIntlGender(_gender)}${AppLocalizations.of(context)!.s}?',
+          name: 'prepareMessage',
+          args: [howMany],
+          desc: 'prepares Messages.',
+          examples: const {'howMany': 1, 'userName': 'boy'});
   }
 
   String giveIntlGender(String userGender) {
     return Intl.gender(
       userGender,
-      male: 'boy',
-      female: 'girl',
+      male: AppLocalizations.of(context)!.boy,
+      female: AppLocalizations.of(context)!.girl,
       other: userGender,
       args: [userGender],
       desc: 'The user is not available to hangout.',
     );
   }
+
 
   @override
   Future<void> changeSex() async {
@@ -74,7 +75,6 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _titleState.accept(
       prepareMessage(
         _amount,
-        giveIntlGender(_gender),
       ),
     );
   }
@@ -91,7 +91,6 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _titleState.accept(
       prepareMessage(
         _amount,
-        giveIntlGender(_gender),
       ),
     );
   }
@@ -150,7 +149,6 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _titleState.accept(
       prepareMessage(
         _amount,
-        giveIntlGender(_gender),
       ),
     );
     _genderState.accept(_gender);
@@ -170,6 +168,16 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _fishState.dispose();
     _launchState.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _titleState.accept(
+      prepareMessage(
+        _amount,
+      ),
+    );
+    super.didChangeDependencies();
   }
 }
 

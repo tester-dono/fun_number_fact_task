@@ -7,13 +7,12 @@
     "@helloWorld": {
       "description": "A programmer greeting"
     },
-    "hello": "Hello {username}",
-    "@hello": {
-      "description": "A welcome message",
-      "placeholders": {
-         "username": {
-           "type": "String"
-         }
-      }
-    }
+  "greetings": "Are you ready to press a button",
+  "@greetings": {
+    "description": "greeting in title"
+  },
+  "boy": "boy",
+  "girl": "girl",
+  "notS": "",
+  "s": "s"
 }

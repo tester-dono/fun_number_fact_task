@@ -1,0 +1,18 @@
+{
+  "language": "Russian",
+  "@language":{
+    "description": "The current Language"
+  },
+  "helloWorld": "Привет Мир!",
+  "@helloWorld": {
+    "description": "A programmer greeting"
+  },
+  "greetings": "Кнопка ждет",
+  "@greetings": {
+    "description": "greeting in title"
+  },
+  "boy": "нул",
+  "girl": "единиц",
+  "notS": "ь",
+  "s": "и"
+}
