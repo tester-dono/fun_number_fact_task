@@ -6,6 +6,8 @@ import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -38,6 +40,7 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   NumberWidgetModel(NumberModel model) : super(model);
 
   String prepareMessage(int howMany, String userName) {
+    String? test = AppLocalizations.of(context)!.helloWorld;
     return Intl.plural(howMany,
         one: 'Are you ready to press a button,$userName?',
         other: 'Are you ready to press a button,${userName}s?',
