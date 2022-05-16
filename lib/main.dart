@@ -23,8 +23,6 @@ class MyApp extends StatelessWidget {
       ),
       home: Provider(
           create: (_) => prefs,
-          // create: (_) => NumberRepository(),
-
           child: const NumberScreen()),
     );
   }
