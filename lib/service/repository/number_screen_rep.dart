@@ -125,12 +125,8 @@ query Launches{
 
   @override
   Future<int> getCounter(SharedPreferences prefs) async {
-    final int? counter = prefs.getInt('counter');
-    if (counter != null) {
+    final int counter = prefs.getInt('counter') ?? 0;
       return counter;
-    } else {
-      return 0;
-    }
   }
 
   @override
