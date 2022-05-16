@@ -23,10 +23,10 @@ abstract class INumberRepository {
   Future<Launch> getGraphQLLaunch();
 
   /// method of getting counter from [SharedPreferences]
-  Future<int> getCounter();
+  Future<int> getCounter(SharedPreferences prefs);
 
   /// method of saving counter in [SharedPreferences]
-  void saveCounter(int newCounter);
+  void saveCounter(int newCounter, SharedPreferences prefs);
 }
 
 /// Repository for working with a NumberScreen
@@ -124,8 +124,7 @@ query Launches{
   }
 
   @override
-  Future<int> getCounter() async {
-    final SharedPreferences prefs = await futurePrefs;
+  Future<int> getCounter(SharedPreferences prefs) async {
     final int? counter = prefs.getInt('counter');
     if (counter != null) {
       return counter;
@@ -135,8 +134,7 @@ query Launches{
   }
 
   @override
-  void saveCounter(int newCounter) async {
-    final SharedPreferences prefs = await futurePrefs;
+  void saveCounter(int newCounter, SharedPreferences prefs) async {
     await prefs.setInt('counter', newCounter);
   }
 }

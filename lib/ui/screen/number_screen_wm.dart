@@ -5,6 +5,9 @@ import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
@@ -30,9 +33,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   @override
   Future<void> sendRequest() async {
-    int counter = await model.getCounter();
+    int counter = await model.getCounter(context.read<SharedPreferences>());
     _counter.accept(++counter);
-    model.setCounter(counter);
+    model.setCounter(counter, context.read<SharedPreferences>());
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _factState.loading();
