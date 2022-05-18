@@ -8,10 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
+import '../../service/repository/number_screen_rep.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
-  return NumberWidgetModel(NumberModel());
+  return NumberWidgetModel(
+    NumberModel(
+      rep: NumberRepository(
+        prefs: context.read<SharedPreferences>(),
+      ),
+    ),
+  );
 }
 
 /// WidgetModel for [NumberScreen]
@@ -33,9 +40,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   @override
   Future<void> sendRequest() async {
-    int counter = await model.getCounter(context.read<SharedPreferences>());
+    int counter = await model.getCounter();
     _counter.accept(++counter);
-    model.setCounter(counter, context.read<SharedPreferences>());
+    model.setCounter(counter);
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _factState.loading();
