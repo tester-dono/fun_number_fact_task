@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Provider(
-          create: (_) => prefs,
+      home: Provider.value(
+          value: prefs,
           child: const NumberScreen()),
     );
   }
