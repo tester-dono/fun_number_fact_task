@@ -41,10 +41,22 @@ class NumberScreen extends ElementaryWidget<INumberWidgetModel> {
               const Divider(
                 color: Colors.black,
               ),
-              const Text(
-                Strings.secondTitle,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              StateNotifierBuilder<int>(
+                listenableState: wm.counter,
+                builder: (ctx, value) {
+                  return value == null
+                      ? const Text(
+                     Strings.secondTitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                  : Text(
+                    "${Strings.secondTitle} : нажали на клавишу $value раз",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )
+                  ;
+                }
               ),
               EntityStateNotifierBuilder<String>(
                   listenableEntityState: wm.quizState,

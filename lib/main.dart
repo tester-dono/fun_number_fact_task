@@ -1,12 +1,18 @@
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  runApp(MyApp(prefs: prefs));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({required this.prefs, Key? key}) : super(key: key);
+
+  final SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const NumberScreen(),
+      home: Provider.value(
+          value: prefs,
+          child: const NumberScreen()),
     );
   }
 }

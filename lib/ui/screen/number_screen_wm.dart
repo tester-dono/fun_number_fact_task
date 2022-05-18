@@ -5,15 +5,27 @@ import 'package:fun_number_fact_task/res/strings/strings.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen.dart';
 import 'package:fun_number_fact_task/ui/screen/number_screen_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
+import '../../service/repository/number_screen_rep.dart';
 
 /// Builder for [NumberWidgetModel]
 NumberWidgetModel numberWidgetModelFactory(BuildContext context) {
-  return NumberWidgetModel(NumberModel());
+  return NumberWidgetModel(
+    NumberModel(
+      rep: NumberRepository(
+        prefs: context.read<SharedPreferences>(),
+      ),
+    ),
+  );
 }
 
 /// WidgetModel for [NumberScreen]
 class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     implements INumberWidgetModel {
+  final _counter = StateNotifier<int>();
+
   late final EntityStateNotifier<String> _factState;
 
   late final EntityStateNotifier<String> _quizState;
@@ -28,6 +40,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
   @override
   Future<void> sendRequest() async {
+    int counter = await model.getCounter();
+    _counter.accept(++counter);
+    model.setCounter(counter);
     String maybeNumber = controller.text.trim();
     if (maybeNumber != '') {
       _factState.loading();
@@ -57,6 +72,9 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   TextEditingController get controller => _controller;
 
   @override
+  StateNotifier<int> get counter => _counter;
+
+  @override
   ListenableState<EntityState<String>> get factState => _factState;
 
   @override
@@ -74,12 +92,13 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
     _factState = EntityStateNotifier<String>.value(Strings.initFact);
     _quizState = EntityStateNotifier<String>.value(Strings.initQuiz);
     _fishState = EntityStateNotifier<String>.value(Strings.initFish);
-    _launchState = EntityStateNotifier<String>.value(Strings.initLaunch);
+    _launchState = EntityStateNotifier<String>.value("nothing to show");
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _counter.dispose();
     _factState.dispose();
     _quizState.dispose();
     _fishState.dispose();
@@ -90,6 +109,8 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
 
 /// Interface of [NumberWidgetModel].
 abstract class INumberWidgetModel extends IWidgetModel {
+  StateNotifier<int> get counter;
+
   ListenableState<EntityState<String>> get factState;
 
   ListenableState<EntityState<String>> get quizState;

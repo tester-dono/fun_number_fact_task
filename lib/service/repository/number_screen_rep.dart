@@ -6,6 +6,7 @@ import 'package:fun_number_fact_task/domain/launch.dart';
 import 'package:fun_number_fact_task/domain/quiz.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Repository interface for working with NumberScreen.
 abstract class INumberRepository {
@@ -20,10 +21,19 @@ abstract class INumberRepository {
 
   /// method of getting launch from graphQl
   Future<Launch> getGraphQLLaunch();
+
+  /// method of getting counter from [SharedPreferences]
+  Future<int> getCounter();
+
+  /// method of saving counter in [SharedPreferences]
+  void saveCounter(int newCounter);
 }
 
 /// Repository for working with a NumberScreen
 class NumberRepository implements INumberRepository {
+  NumberRepository({required this.prefs});
+  final SharedPreferences prefs;
+
   @override
   Future<String> getNumberFact(int number) async {
     http.Response responseValue = await http.get(
@@ -112,5 +122,16 @@ query Launches{
       // then throw an exception.
       throw Exception('Failed to load quiz');
     }
+  }
+
+  @override
+  Future<int> getCounter() async {
+    final int counter = prefs.getInt('counter') ?? 0;
+      return counter;
+  }
+
+  @override
+  void saveCounter(int newCounter) async {
+    await prefs.setInt('counter', newCounter);
   }
 }

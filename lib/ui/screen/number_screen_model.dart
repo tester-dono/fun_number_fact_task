@@ -7,11 +7,22 @@ import 'package:fun_number_fact_task/service/repository/number_screen_rep.dart';
 
 /// Model of [NumberWidgetModel]
 class NumberModel extends ElementaryModel {
-  final NumberRepository _rep = NumberRepository();
+  NumberModel({required this.rep});
+  final NumberRepository rep;
+
+  /// method of getting counter from SharedPrefs
+  Future<int> getCounter() async {
+    return rep.getCounter();
+  }
+
+  /// method of saving counter in SharedPrefs
+  void setCounter(int newCounter) {
+    rep.saveCounter(newCounter);
+  }
 
   /// method of getting random quiz
   Future<Quiz> getFirstQuiz() async {
-    List<Quiz> _quiz = await _rep.getQuiz();
+    List<Quiz> _quiz = await rep.getQuiz();
 
     return _quiz.first;
   }
@@ -19,10 +30,10 @@ class NumberModel extends ElementaryModel {
   /// method of prepare the whole answer
   Future<NumberInfo> getNumberInfo(int number) async {
     NumberInfo _answer = NumberInfo(
-      fact: await _rep.getNumberFact(number),
+      fact: await rep.getNumberFact(number),
       quiz: await getFirstQuiz(),
-      fish: await _rep.getHttpsFish(),
-      launch: await _rep.getGraphQLLaunch(),
+      fish: await rep.getHttpsFish(),
+      launch: await rep.getGraphQLLaunch(),
     );
 
     return _answer;
