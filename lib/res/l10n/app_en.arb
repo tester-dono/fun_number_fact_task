@@ -11,8 +11,20 @@
   "@greetings": {
     "description": "greeting in title"
   },
-  "boy": "boy",
-  "girl": "girl",
+  "boy": "{boys2, plural, one{boy} other{boys}",
+  "@boy" : {
+    "description" : "New messages count on the Home screen",
+    "placeholders": {
+      "boys2": {}
+    }
+  },
+  "girl": "{girls2, plural, one{girl} other{girls}",
+  "@girl" : {
+    "description" : "New messages count on the Home screen",
+    "placeholders": {
+      "girls2": {}
+    }
+  },
   "notS": "",
   "s": "s"
 }

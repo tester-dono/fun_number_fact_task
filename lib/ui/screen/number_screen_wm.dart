@@ -53,8 +53,8 @@ class NumberWidgetModel extends WidgetModel<NumberScreen, NumberModel>
   String giveIntlGender(String userGender) {
     return Intl.gender(
       userGender,
-      male: AppLocalizations.of(context)!.boy,
-      female: AppLocalizations.of(context)!.girl,
+      male: AppLocalizations.of(context)!.boy(1),
+      female: AppLocalizations.of(context)!.girl(1),
       other: userGender,
       args: [userGender],
       desc: 'The user is not available to hangout.',
